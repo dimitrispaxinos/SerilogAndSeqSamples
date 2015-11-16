@@ -1,0 +1,72 @@
+﻿<Window x:Class="SerilogSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SeriLog Sample" Height="350" Width="525">
+    <TabControl>
+        <TabItem Header="Basic Cases">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" Content="Create Info" Click="CreateInformationEntry"/>
+                <Button Grid.Row="2" Content="Create Error" Click="CreateErrorEntry"/>
+                <Button Grid.Row="3" Content="Create Error with object and Exception" Click="CreateEntryWithObject"/>
+                <Button Grid.Row="6" Content="Create Entry Enriched With User Info" Click="CreateEntryEnrichedWithUserInfo"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Contextual Logging">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" Content="Add One Property To Context" Click="AddOnePropertyToContext"/>
+                <Button Grid.Row="2" Content="Add a complete structured Object" Click="AddAStructuredObjectToContext"/>
+                <Button Grid.Row="3" Content="Add a dynamic Object" Click="AddADynamicObjectToContext"/>
+                <Button Grid.Row="4" Content="Add MultipleProperties To Context" Click="AddMultiplePropertiesToContext"/>
+                <Button Grid.Row="5" Content="Add Class Name As Context" Click="AddClassNameSpaceToContext"/>
+                <Button Grid.Row="6" Content="Add MultipleProperties To Context using Custom PropertyAttacher" Click="AddMultiplePropertiesToContextUsingCustomPropertyAttacher"/>
+                <Button Grid.Row="7" Content="Add Context using Enrichers" Click="AddContextUsingEnrichers"/>
+            </Grid>
+        </TabItem>
+        
+        <TabItem Header="Exceptions">
+            
+        </TabItem>
+        
+        <TabItem Header="Timing Cases - Calling Web Services">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" Content="Log Successful Service Call" Click="LogSuccesfullServiceCall"/>
+                <Button Grid.Row="2" Content="Produce Warning For Service Call That Takes Long" Click="ProduceWarningForServiceCallThatTakesLong"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+    
+   
+</Window>

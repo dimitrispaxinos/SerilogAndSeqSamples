@@ -1,0 +1,9 @@
+D:\Dropbox\SerilogSample\Serilog.Lib\bin\Debug\Serilog.Lib.dll
+D:\Dropbox\SerilogSample\Serilog.Lib\bin\Debug\Serilog.Lib.pdb
+D:\Dropbox\SerilogSample\Serilog.Lib\obj\Debug\Serilog.Lib.dll
+D:\Dropbox\SerilogSample\Serilog.Lib\obj\Debug\Serilog.Lib.pdb
+C:\Users\gdp1\Dropbox\SerilogSample\Serilog.Lib\bin\Debug\Serilog.Lib.dll
+C:\Users\gdp1\Dropbox\SerilogSample\Serilog.Lib\bin\Debug\Serilog.Lib.pdb
+C:\Users\gdp1\Dropbox\SerilogSample\Serilog.Lib\obj\Debug\Serilog.Lib.csprojResolveAssemblyReference.cache
+C:\Users\gdp1\Dropbox\SerilogSample\Serilog.Lib\obj\Debug\Serilog.Lib.dll
+C:\Users\gdp1\Dropbox\SerilogSample\Serilog.Lib\obj\Debug\Serilog.Lib.pdb

@@ -1,0 +1,13 @@
+﻿<Window x:Class="SerilogSample.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="25" FontWeight="Bold" TextWrapping="Wrap">I could be an NG app in a parallel universe :)</TextBlock>
+        <Button Grid.Row="1" Click="ButtonBase_OnClick" Content="Throw Exception"/>
+    </Grid>
+</Window>
