@@ -1,147 +1,83 @@
 ﻿using System;
-using System.Configuration;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Serilog.Context;
 
 namespace Serilog.RestCallMonitoring
 {
-    public abstract class SerilogHttpClientWrapper : HttpClient
+    public class SerilogHttpClientWrapper : HttpClient
     {
-        private static string Environment = ConfigurationManager.AppSettings["CurrentEnvironment"];
-        private static string ComputerName = System.Environment.MachineName;
-
-        private static string _postPutTemplateString =
-            "{methodName} Method calling {@requestUri}.HttpStatus: {StatusCode} The request was {@content} and the response was {@response}";
-
-        private static string _postPutFailedTemplateString =
-            "{methodName} Method failed when calling {@requestUri}.HttpStatus: {StatusCode} The request was {@content} and the response was {@response}";
-
-        private static string _getDeleteTemplateString =
-            "{methodName} Method failed when calling {@requestUri}.HttpStatus: {StatusCode} The response was {@response}";
+        private static string _templateString =
+            "Rest Call: {RestAction} called {RequestUri}. HttpStatus: {StatusCode}.";
 
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
 
-        protected SerilogHttpClientWrapper(HttpClient httpClient, ILogger logger)
+        public SerilogHttpClientWrapper()
+        {
+            _httpClient = new HttpClient();
+            _logger = new LoggerConfiguration().WriteTo.Seq("http://localhost:5341").CreateLogger();
+        }
+
+
+        public SerilogHttpClientWrapper(HttpClient httpClient)//, ILogger logger)
         {
             _httpClient = httpClient;
-            _logger = logger;
+            //_logger = logger;
+            _logger = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Seq("http://localhost:5341").CreateLogger();
+        }
+
+        #region Overrides
+
+        public async new Task<HttpResponseMessage> GetAsync(Uri requestUri)
+        {
+            var res = await _httpClient.GetAsync(requestUri);
+            LogResponseMessage(requestUri, res, "GET");
+            return res;
         }
 
         public new async Task<HttpResponseMessage> PostAsync(Uri requestUri, HttpContent content)
         {
             var res = await _httpClient.PostAsync(requestUri, content);
+            LogResponseMessage(requestUri, res, "POST", content);
+            return res;
+        }
 
-            if (!res.IsSuccessStatusCode)
+        public async new Task<HttpResponseMessage> PutAsync(Uri requestUri, HttpContent content)
+        {
+            var res = await _httpClient.PutAsync(requestUri, content);
+            LogResponseMessage(requestUri, res, "PUT", content);
+            return res;
+        }
+
+        public async new Task<HttpResponseMessage> DeleteAsync(Uri requestUri)
+        {
+            var res = await _httpClient.DeleteAsync(requestUri);
+            LogResponseMessage(requestUri, res, "DELETE");
+            return res;
+        }
+
+        #endregion
+
+        protected virtual void LogResponseMessage(Uri requestUri, HttpResponseMessage res, string restAction, HttpContent content = null)
+        {
+            using (LogContext.PushProperty("Request", content))
+            using (LogContext.PushProperty("Response", res.Content.ReadAsStringAsync().Result))
             {
-                _logger.Error(
-                        _postPutFailedTemplateString, "Post",
-                        CombineAddress(requestUri),
-                        res.StatusCode,
-                        content,
-                        res.Content.ReadAsStringAsync().Result);
+                if (res.IsSuccessStatusCode)
+                {
+                    _logger.Information(
+                            _templateString, restAction,
+                            CombineAddress(requestUri),
+                            res.StatusCode);
+                }
+                else
+                    _logger.Error(
+                            _templateString, restAction,
+                            CombineAddress(requestUri),
+                            res.StatusCode);
             }
-
-
-
-            //if (ShouldSercviceCallBeRecorded(res.StatusCode))
-            //{
-            //    GetLoggerWithContext()
-            //        .Error(
-            //            _postPutFailedTemplateString, "Post",
-            //            CombineAddress(requestUri),
-            //            res.StatusCode,
-            //            content,
-            //            res.Content.ReadAsStringAsync().Result);
-            //}
-            return res;
         }
-
-        public new Task<HttpResponseMessage> PutAsync(Uri requestUri, HttpContent content)
-        {
-            var res = _httpClient.PutAsync(requestUri, content);
-
-            //if (ShouldSercviceCallBeRecorded(res.Result.StatusCode))
-            //{
-            //    GetLoggerWithContext()
-            //        .Error(
-            //            _postPutFailedTemplateString, "Post",
-            //            CombineAddress(requestUri),
-            //            res.Result.StatusCode,
-            //            content,
-            //            res.Result.Content.ReadAsStringAsync().Result);
-            //}
-            return res;
-        }
-
-        public async new Task<HttpResponseMessage> GetAsync(Uri requestUri)
-        {
-            var res =await _httpClient.GetAsync(requestUri);
-            
-
-            
-
-
-            if (!res.IsSuccessStatusCode)
-            {
-                _logger
-                    .Error(
-                        _getDeleteTemplateString, "Get",
-                        CombineAddress(requestUri),
-                        res.StatusCode,
-                        res.Content.ReadAsStringAsync().Result);
-            }
-            else
-            {
-                _logger.Information();
-            }
-
-
-            //if (ShouldSercviceCallBeRecorded(res.Result.StatusCode))
-            //{
-            //    GetLoggerWithContext()
-            //        .Error(
-            //            _getDeleteTemplateString, "Get",
-            //            CombineAddress(requestUri),
-            //            res.Result.StatusCode,
-            //            res.Result.Content.ReadAsStringAsync().Result);
-            //}
-            return res;
-        }
-
-        public new Task<HttpResponseMessage> DeleteAsync(Uri requestUri)
-        {
-            var res = _httpClient.DeleteAsync(requestUri);
-
-            //if (ShouldSercviceCallBeRecorded(res.Result.StatusCode))
-            //{
-            //    GetLoggerWithContext()
-            //        .Error(
-            //            _getDeleteTemplateString, "Delete",
-            //            CombineAddress(requestUri),
-            //            res.Result.StatusCode,
-            //            res.Result.Content.ReadAsStringAsync().Result);
-            //}
-            return res;
-        }
-
-        /// <summary>
-        /// Define the statuses in which the response should be recorded.
-        /// </summary>
-        /// <param name="statusCode"></param>
-        /// <returns></returns>
-        protected abstract bool ShouldSercviceCallBeRecorded(HttpStatusCode statusCode);
-
-        /// <summary>
-        /// Add Common Properties to every message
-        /// </summary>
-        /// <returns></returns>
-        private ILogger GetLoggerWithContext()
-        {
-            return _logger.ForContext("Environment", Environment).ForContext("ComputerName", ComputerName);
-        }
-
         private string CombineAddress(Uri uri)
         {
             if (uri.IsAbsoluteUri)
@@ -151,6 +87,5 @@ namespace Serilog.RestCallMonitoring
 
             return String.Format("{0}{1}", _httpClient.BaseAddress.AbsoluteUri, uri.ToString());
         }
-
     }
 }

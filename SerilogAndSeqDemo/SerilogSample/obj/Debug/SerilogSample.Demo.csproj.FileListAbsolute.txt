@@ -109,3 +109,6 @@ C:\Github\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\Serilog
 C:\Github\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\SerilogSample.g.resources
 C:\Github\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\SerilogSample.Properties.Resources.resources
 C:\Github\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\SerilogSample.Demo.csproj.GenerateResource.Cache
+C:\Users\Dimitris\Documents\GitHub\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\bin\Debug\SerilogSample.exe.config
+C:\Users\Dimitris\Documents\GitHub\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\SerilogSample.exe
+C:\Users\Dimitris\Documents\GitHub\SerilogAndSeqSamples\SerilogAndSeqDemo\SerilogSample\obj\Debug\SerilogSample.pdb

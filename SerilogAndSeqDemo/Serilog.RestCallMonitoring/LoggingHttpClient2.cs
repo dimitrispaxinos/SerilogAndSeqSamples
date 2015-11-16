@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using Serilog;
 
 namespace Eurofins.Scp.Logging
